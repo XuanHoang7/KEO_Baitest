@@ -315,7 +315,7 @@ namespace KEO_Baitest.Services.Implements
             };
         }
 
-        public ResponseGetDTO<BC_N_X_T_VatTu_ThanhPham> BC_N_X_SumKhoVatTu(DateTime? dateFrom, DateTime? dateTo, int page)
+        public ResponseGetDTO<BC_N_X_T_VatTu_ThanhPhamDTO> BC_N_X_SumKhoVatTu(DateTime? dateFrom, DateTime? dateTo, int page)
         {
             int pageSize = 20;
 
@@ -372,11 +372,11 @@ namespace KEO_Baitest.Services.Implements
             // Nhóm theo tên nhóm vật tư và các thông tin vật tư bên dưới nhóm
             var groupedResult = result
                 .GroupBy(r => r.NhomVatTuName)
-                .Select(g => new BC_N_X_T_VatTu_ThanhPham
+                .Select(g => new BC_N_X_T_VatTu_ThanhPhamDTO
                 {
                     Name = g.Key,
                     TVT = g.GroupBy(p => new { p.MaKyThuat, p.MaKeToan, p.TenVatTu, p.DVT })
-                            .Select(vtGroup => new BC_N_X_T_VatTu_ThanhPhamDetail
+                            .Select(vtGroup => new BC_N_X_T_VatTu_ThanhPhamDetailDTO
                             {
                                 MaKyThuat = vtGroup.Key.MaKyThuat,
                                 MaKeToan = vtGroup.Key.MaKeToan,
@@ -398,7 +398,7 @@ namespace KEO_Baitest.Services.Implements
                 .Take(pageSize)
                 .ToList();
 
-            return new ResponseGetDTO<BC_N_X_T_VatTu_ThanhPham>
+            return new ResponseGetDTO<BC_N_X_T_VatTu_ThanhPhamDTO>
             {
                 TotalRow = totalRow,
                 TotalPage = totalPage,

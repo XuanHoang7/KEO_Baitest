@@ -1,6 +1,6 @@
 ﻿namespace KEO_Baitest.Data.DTOs
 {
-    public class BC_N_X_T_VatTu_ThanhPhamDetail
+    public class BC_N_X_T_VatTu_ThanhPhamDetailDTO
     {
         public string MaKyThuat { get; set; }
         public string MaKeToan { get; set; }

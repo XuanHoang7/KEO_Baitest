@@ -11,6 +11,6 @@ namespace KEO_Baitest.Services.Interfaces
         public ResponseDTO Update(PhieuVatTuUpdateDTO dto);
         public ResponseGetDTO<PhieuDTO> GetPhieus(DateTime? dateFrom, DateTime? dateTo, int page, bool isNhap);
         public ResponseGetDTO<BC_XuatNhapKhoVatTu> BC_N_X_KhoVatTu(DateTime? dateFrom, DateTime? dateTo, int page, bool status);
-        public ResponseGetDTO<BC_N_X_T_VatTu_ThanhPham> BC_N_X_SumKhoVatTu(DateTime? dateFrom, DateTime? dateTo, int page);
+        public ResponseGetDTO<BC_N_X_T_VatTu_ThanhPhamDTO> BC_N_X_SumKhoVatTu(DateTime? dateFrom, DateTime? dateTo, int page);
     }
 }

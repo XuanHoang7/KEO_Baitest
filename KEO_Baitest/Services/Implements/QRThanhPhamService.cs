@@ -1,5 +1,6 @@
 ﻿using KEO_Baitest.Data.DTOs;
 using KEO_Baitest.Data.Entities;
+using KEO_Baitest.Repository.Implements;
 using KEO_Baitest.Repository.Interfaces;
 using KEO_Baitest.Services.Interfaces;
 using KiemTraThuViec1.Data;
@@ -62,36 +63,34 @@ namespace KEO_Baitest.Services.Implements
             return null;
         }
 
-        public ResponseDTO Update(QRVatTuO dto)
+        public ResponseDTO Update(UpdateQRThanhPhamDTO dto)
         {
-            //var errorResponse = ValidateDTO(dto);
-            //if (errorResponse != null) return errorResponse;
+            string? userId = _userService.GetCurrentUser();
+            if (userId == null)
+                return new ResponseDTO { Code = 400, Message = "User not exists" };
 
-            //string? userId = _userService.GetCurrentUser();
-            //if (userId == null)
-            //    return new ResponseDTO { Code = 400, Message = "User not exists" };
+            //var entityExists = _repository.Find(r => ((dynamic)r).Ma.Equals(((dynamic)dto).Ma.Trim().ToUpper().Replace(" ", string.Empty)))
+            //    .FirstOrDefault();
 
-            ////var entityExists = _repository.Find(r => ((dynamic)r).Ma.Equals(((dynamic)dto).Ma.Trim().ToUpper().Replace(" ", string.Empty)))
-            ////    .FirstOrDefault();
-            //var entityExists = _repository.Find(r => r.Id.Equals(dto.Id)).FirstOrDefault();
+            if (Guid.TryParse(dto.Id, out Guid guid))
+            {
+                var entityExists = _repository.Find(r => r.Id.Equals(guid)).FirstOrDefault();
+                if (entityExists != null)
+                {
+                    entityExists.UpdateBy = userId;
+                    entityExists.UpdateDate = DateTime.Now;
+                    entityExists.SoLot = dto.Solot;
+                    _repository.Update(entityExists);
+                    if (_repository.IsSaveChange())
+                        return new ResponseDTO()
+                        {
+                            Code = 200,
+                            Message = "Success",
+                            Description = null
+                        };
 
-            //if (entityExists != null)
-            //{
-            //    entityExists.UpdateBy = userId;
-            //    entityExists.UpdateDate = DateTime.Now;
-            //    entityExists.NhaCungCapId = dto
-            //    if (e != null)
-            //    {
-            //        _repository.Update(e);
-            //        if (_repository.IsSaveChange())
-            //            return new ResponseDTO()
-            //            {
-            //                Code = 200,
-            //                Message = "Success",
-            //                Description = null
-            //            };
-            //    }
-            //}
+                }
+            }
             return new ResponseDTO()
             {
                 Code = 400,

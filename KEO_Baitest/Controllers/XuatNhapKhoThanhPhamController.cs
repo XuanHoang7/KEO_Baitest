@@ -63,7 +63,7 @@ namespace KEO_Baitest.Controllers
         }
 
         [HttpGet("/BC_Xuat_Kho_Tong_Ket_ThanhPham")]
-        public ResponseGetDTO<BC_N_X_T_VatTu_ThanhPham> BC_Xuat_Kho_Tong_Ket_ThanhPham([FromQuery] DateTime? dateFrom,
+        public ResponseGetDTO<BC_N_X_T_VatTu_ThanhPhamDTO> BC_Xuat_Kho_Tong_Ket_ThanhPham([FromQuery] DateTime? dateFrom,
             [FromQuery] DateTime? dateTo, [FromQuery] int page = 1)
         {
             dateFrom = dateFrom ?? DateTime.MinValue;

@@ -1,0 +1,6 @@
+@KEO_Baitest_HostAddress = http://localhost:5085
+
+GET {{KEO_Baitest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

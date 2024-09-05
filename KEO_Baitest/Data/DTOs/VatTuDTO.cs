@@ -1,0 +1,11 @@
+﻿namespace KEO_Baitest.Data.DTOs
+{
+    public class VatTuDTO
+    {
+        public string MaKyThuat { get; set; }
+        public string MaKeToan { get; set; }
+        public string TenVatTu { get; set; }
+        public string MaDonViTinh { get; set; }
+        public string MaNhomVatTu { get; set; }
+    }
+}

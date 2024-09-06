@@ -45,7 +45,9 @@ namespace KEO_Baitest.Services.Implements
                 MaKyThuat = entity.MaKyThuat,
                 TenVatTu = entity.Name,
                 MaDonViTinh = donViTinh != null ? donViTinh.MaDonViTinh : "",
-                MaNhomVatTu = nhomVatTu != null ? nhomVatTu.MaNhomVatTu : ""
+                MaNhomVatTu = nhomVatTu != null ? nhomVatTu.MaNhomVatTu : "",
+                NameDonViTinh = donViTinh != null ? donViTinh.Name : "",
+                NameNhomVatTu = nhomVatTu != null ? nhomVatTu.Name : ""
             };
         }
 

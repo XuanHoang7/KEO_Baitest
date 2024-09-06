@@ -48,7 +48,9 @@ namespace KEO_Baitest.Services.Implements
                 MaKyThuat = entity.MaThanhPham,
                 TenThanhPham = entity.Name,
                 MaDonViTinh = donViTinh != null ? donViTinh.MaDonViTinh : "",
-                MaNhomThanhPham = nhomThanhPham != null ? nhomThanhPham.MaNhomThanhPham : ""
+                MaNhomThanhPham = nhomThanhPham != null ? nhomThanhPham.MaNhomThanhPham : "",
+                NameDonViTinh = donViTinh != null ? donViTinh.Name : "",
+                TenNhomThanhPham = nhomThanhPham != null ? nhomThanhPham.Name : ""
             };
         }
 
@@ -62,7 +64,7 @@ namespace KEO_Baitest.Services.Implements
                 MaKeToan = dto.MaKeToan,
                 Name = dto.TenThanhPham,
                 DonViTinhId = donViTinh != null ? donViTinh.Id : Guid.Empty,
-                NhomThanhPhamId = nhomThanhPham != null ? nhomThanhPham.Id : Guid.Empty
+                NhomThanhPhamId = nhomThanhPham != null ? nhomThanhPham.Id : Guid.Empty,
             };
         }
 

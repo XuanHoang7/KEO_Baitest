@@ -4,7 +4,6 @@ namespace KEO_Baitest.Data.Entities
 {
     public class QRVatTu : Entities
     {
-        public Guid Id { get; set; }
         [Required]
         public Guid VatTuId { get; set; }
         public VatTu vatTu { get; set; }

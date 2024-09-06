@@ -2,6 +2,7 @@
 {
     public class VatTuDTO
     {
+        public string? Id { get; set; }
         public string MaKyThuat { get; set; }
         public string MaKeToan { get; set; }
         public string TenVatTu { get; set; }

@@ -25,6 +25,13 @@ namespace KiemTraThuViec1.Controllers
             return res;
         }
 
+        [HttpGet("/[controller]/{id}")]
+        public virtual ResponseGetDTO<TDto> GetById(string id)
+        {
+            var res = _service.GetById(id);
+            return res;
+        }
+
         [HttpPost]
         [Authorize]
         public IActionResult Add(TDto dto)

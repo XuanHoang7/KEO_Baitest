@@ -47,7 +47,7 @@ namespace KEO_Baitest.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("MaDonViTinh")
+                    b.Property<string>("Ma")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");

@@ -2,6 +2,7 @@
 {
     public class NhaCungCapDTO
     {
+        public string? Id { get; set; }
         public string MaNhaCungCap { get; set; }
 
         public string? TenNhaCungCap { get; set; }

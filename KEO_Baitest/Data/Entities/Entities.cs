@@ -4,6 +4,7 @@ namespace KEO_Baitest.Data.Entities
 {
     public abstract class Entities
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
         [Required]
         public bool IsDeleted { get; set; } = false;
 

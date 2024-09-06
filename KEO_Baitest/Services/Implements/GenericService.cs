@@ -1,6 +1,7 @@
 ﻿using KEO_Baitest.Data;
 using KEO_Baitest.Data.DTOs;
 using KEO_Baitest.Data.Entities;
+using KEO_Baitest.Repository.Implements;
 using KEO_Baitest.Repository.Interfaces;
 using KEO_Baitest.Services.Interfaces;
 using KiemTraThuViec1.Data;
@@ -71,7 +72,22 @@ namespace KEO_Baitest.Services.Implements
             };
         }
 
-
+        ResponseGetDTO<TDto> IGenericService<TDto>.GetById(string id)
+        {
+            TEntity? entity = null;
+            if (Guid.TryParse(id, out Guid parsedGuid))
+            {
+                entity = _repository.Find(r => (r.IsDeleted == false) && r.Id.Equals(parsedGuid))
+                .FirstOrDefault();
+            }
+            return new ResponseGetDTO<TDto>()
+            {
+                TotalRow = entity != null ? 1 : 0,
+                TotalPage = entity != null ? 1 : 0,
+                Datalist = entity != null ? new List<TDto>() { MapToDto(entity) } : new List<TDto>(),
+                PageSize = 20
+            };
+        }
 
         public virtual ResponseDTO GetByMa(string ma)
         {
@@ -200,6 +216,7 @@ namespace KEO_Baitest.Services.Implements
         protected abstract TEntity MapToEntity(TDto dto);
 
         protected abstract ResponseDTO? ValidateDTO(TDto dto);
+
     }
 
 }

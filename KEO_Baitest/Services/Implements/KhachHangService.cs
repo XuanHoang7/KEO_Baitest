@@ -214,5 +214,31 @@ namespace KEO_Baitest.Services.Implements
                 Description = null
             };
         }
+
+        public ResponseGetDTO<KhachHangDTO> GetById(string id)
+        {
+            KhachHang? entity = null;
+            if (Guid.TryParse(id, out Guid parsedGuid))
+            {
+                entity = _khachHangRepository.Find(r => (r.IsDeleted == false) && r.Id.Equals(parsedGuid))
+                .FirstOrDefault();
+            }
+            return new ResponseGetDTO<KhachHangDTO>()
+            {
+                TotalRow = entity != null ? 1 : 0,
+                TotalPage = entity != null ? 1 : 0,
+                Datalist = entity != null ? new List<KhachHangDTO>() { 
+                    new KhachHangDTO()
+                    {
+                        Id = entity.Id.ToString(),
+                        MaKhachHang = entity.MaKhachHang,
+                        DiaChi = entity.DiaChi,
+                        SoDienThoai = entity.SoDienThoai,
+                        TenKhachHang = entity.Name  
+                    }
+                } : new List<KhachHangDTO>(),
+                PageSize = 20
+            };
+        }
     }
 }

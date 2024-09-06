@@ -4,6 +4,7 @@ namespace KEO_Baitest.Data.DTOs
 {
     public class KhachHangDTO
     {
+        public string? Id { get; set; }
         public string MaKhachHang { get; set; }
 
         public string? TenKhachHang { get; set; }

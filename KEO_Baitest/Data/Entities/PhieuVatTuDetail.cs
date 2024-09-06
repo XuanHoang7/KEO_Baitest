@@ -4,8 +4,6 @@ namespace KEO_Baitest.Data.Entities
 {
     public class PhieuVatTuDetail : Entities
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
-
         [Required]
         public Guid PhieuVatTuId { get; set; }
         public PhieuVatTu PhieuVatTu { get; set; }

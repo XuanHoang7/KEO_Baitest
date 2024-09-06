@@ -10,6 +10,7 @@ namespace KEO_Baitest.Services
         ResponseDTO Add(TDto dto);
         ResponseDTO Update(TDto entity);
         ResponseDTO Delete(string ma);
+        ResponseGetDTO<TDto> GetById(string id);
     }
 
     

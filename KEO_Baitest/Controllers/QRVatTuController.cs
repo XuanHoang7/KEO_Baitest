@@ -32,9 +32,9 @@ namespace KEO_Baitest.Controllers
         }
         [HttpDelete]
         [Authorize]
-        public IActionResult DeletePVTDetails(string ma)
+        public IActionResult DeletePVTDetails(string id)
         {
-            var res = _qRVatTuService.Delete(ma);
+            var res = _qRVatTuService.Delete(id);
             return StatusCode(res.Code, res);
         }
 

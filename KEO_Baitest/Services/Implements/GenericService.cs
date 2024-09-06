@@ -1,12 +1,8 @@
-﻿using KEO_Baitest.Data;
-using KEO_Baitest.Data.DTOs;
+﻿using KEO_Baitest.Data.DTOs;
 using KEO_Baitest.Data.Entities;
-using KEO_Baitest.Repository.Implements;
 using KEO_Baitest.Repository.Interfaces;
 using KEO_Baitest.Services.Interfaces;
 using KiemTraThuViec1.Data;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 
 namespace KEO_Baitest.Services.Implements
 {
@@ -100,38 +96,33 @@ namespace KEO_Baitest.Services.Implements
             var errorResponse = ValidateDTO(dto);
             if (errorResponse != null) return errorResponse;
 
-            var entityExists = getEntityByDto(dto);
-
             string? userId = _userService.GetCurrentUser();
             if (userId == null)
                 return new ResponseDTO { Code = 400, Message = "User not exists" };
 
-            if (entityExists == null)
-            {
-                TEntity entity = MapToEntity(dto);
-                entity.CreateBy = userId;
-                entity.CreateDate = DateTime.Now;
+            TEntity entity = MapToEntity(dto);
+            entity.CreateBy = userId;
+            entity.CreateDate = DateTime.Now;
 
-                _repository.Add(entity);
-                if (_repository.IsSaveChange())
-                    return new ResponseDTO()
-                    {
-                        Code = 200,
-                        Message = "Success",
-                        Description = null
-                    };
-            }
+            _repository.Add(entity);
+            if (_repository.IsSaveChange())
+                return new ResponseDTO()
+                {
+                    Code = 200,
+                    Message = "Success",
+                    Description = null
+                };
             return new ResponseDTO()
             {
                 Code = 400,
-                Message = "Entity already exists",
+                Message = "Add failed",
                 Description = null
             };
         }
 
         public ResponseDTO Update(TDto dto)
         {
-            var errorResponse = ValidateDTO(dto);
+            var errorResponse = ValidateDTO(dto, false);
             if (errorResponse != null) return errorResponse;
 
             string? userId = _userService.GetCurrentUser();
@@ -215,7 +206,7 @@ namespace KEO_Baitest.Services.Implements
 
         protected abstract TEntity MapToEntity(TDto dto);
 
-        protected abstract ResponseDTO? ValidateDTO(TDto dto);
+        protected abstract ResponseDTO? ValidateDTO(TDto dto, bool isADD = true);
 
     }
 

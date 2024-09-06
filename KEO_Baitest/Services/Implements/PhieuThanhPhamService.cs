@@ -207,7 +207,7 @@ namespace KEO_Baitest.Services.Implements
                 .ToList();
 
             var result = phieuThanhPhamDetails.Select(detail => {
-                var thanhPham = _ThanhPhamRepository.GetById(detail.ThanhPhamId);
+                var thanhPham = _ThanhPhamRepository.GetById(detail.ThanhPhamId.ToString());
 
                 return new BC_NhapKhoThanhPhamDTO
                 {
@@ -215,7 +215,7 @@ namespace KEO_Baitest.Services.Implements
                     MaKyThuat = thanhPham.MaThanhPham,
                     MaKeToan = thanhPham.MaKeToan,
                     TenThanhPham = thanhPham.Name,
-                    Dvt = _donViTinhRepository.GetById((Guid)(thanhPham.DonViTinhId)).Name,
+                    Dvt = _donViTinhRepository.GetById(thanhPham.DonViTinhId.ToString()).Name,
                     SoLuong = detail.SoLuong,
                     Time = detail.CreateDate.ToString("HH:mm:ss")
                 };
@@ -288,9 +288,9 @@ namespace KEO_Baitest.Services.Implements
 
             // Kết quả tính toán vật tư của tháng hiện tại
             var result = phieuThanhPhamDetails.Select(detail => {
-                var vatTu = _ThanhPhamRepository.GetById(detail.ThanhPhamId);
-                var nhomVatTu = _nhomThanhPhamRepository.GetById(vatTu.NhomThanhPhamId); // Lấy nhóm vật tư
-                var phieuThanhPham = _phieuThanhPhamRepository.GetById(detail.PhieuThanhPhamId);
+                var vatTu = _ThanhPhamRepository.GetById(detail.ThanhPhamId.ToString());
+                var nhomVatTu = _nhomThanhPhamRepository.GetById(vatTu.NhomThanhPhamId.ToString()); // Lấy nhóm vật tư
+                var phieuThanhPham = _phieuThanhPhamRepository.GetById(detail.PhieuThanhPhamId.ToString());
                 // Tính số lượng đầu kỳ
                 double dauKy = tonCuoiKyTruoc.ContainsKey(vatTu.Id) ? tonCuoiKyTruoc[vatTu.Id] : 0;
 
@@ -300,7 +300,7 @@ namespace KEO_Baitest.Services.Implements
                     vatTu.MaThanhPham,
                     vatTu.MaKeToan,
                     TenVatTu = vatTu.Name,
-                    DVT = _donViTinhRepository.GetById((Guid)(vatTu.DonViTinhId)).Name,
+                    DVT = _donViTinhRepository.GetById(vatTu.DonViTinhId.ToString()).Name,
                     detail.SoLuong,
                     detail.Status,
                     phieuThanhPham.ImportOrExport,
@@ -364,15 +364,15 @@ namespace KEO_Baitest.Services.Implements
                 .ToList();
 
             var result = phieuThanhPhamDetails.Select(detail => {
-                var thanhPham = _ThanhPhamRepository.GetById(detail.ThanhPhamId);
-                var khachHang = _khachHangRepository.GetById((Guid)detail.KhachHangId);
+                var thanhPham = _ThanhPhamRepository.GetById(detail.ThanhPhamId.ToString());
+                var khachHang = _khachHangRepository.GetById(detail.KhachHangId.ToString());
                 return new BC_XuatKhoThanhPhamDTO
                 {
                     Date = detail.CreateDate.ToString("MM/dd/yyyy"),
                     MaKyThuat = thanhPham.MaThanhPham,
                     MaKeToan = thanhPham.MaKeToan,
                     TenThanhPham = thanhPham.Name,
-                    Dvt = _donViTinhRepository.GetById((Guid)(thanhPham.DonViTinhId)).Name,
+                    Dvt = _donViTinhRepository.GetById(thanhPham.DonViTinhId.ToString()).Name,
                     SoLuong = detail.SoLuong,
                     Time = detail.CreateDate.ToString("HH:mm:ss"),
                     DonViGiaoHang = khachHang.Name
@@ -419,15 +419,15 @@ namespace KEO_Baitest.Services.Implements
                 .Where(r => !r.IsDeleted) // Loại bỏ những khách hàng bị xóa (nếu cần)
                 .Select(r => new NhapXuatKhoThanhPhamDetailDTO
                 {
-                    MaKyThuat = _ThanhPhamRepository.GetById(r.ThanhPhamId).MaThanhPham,
-                    MaKeToan = _ThanhPhamRepository.GetById(r.ThanhPhamId).MaKeToan,
+                    MaKyThuat = _ThanhPhamRepository.GetById(r.ThanhPhamId.ToString()).MaThanhPham,
+                    MaKeToan = _ThanhPhamRepository.GetById(r.ThanhPhamId.ToString()).MaKeToan,
                     Id = r.Id,
                     NguoiNhap = r.CreateBy!,
                     Note = r.Notes,
                     SoLot = r.SoLot,
                     SoLuong = r.SoLuong,
-                    TenDvt = _donViTinhRepository.GetById(_ThanhPhamRepository.GetById(r.ThanhPhamId).DonViTinhId).Name,
-                    TenThanhPham = _ThanhPhamRepository.GetById(r.ThanhPhamId).Name,
+                    TenDvt = _donViTinhRepository.GetById(_ThanhPhamRepository.GetById(r.ThanhPhamId.ToString()).Id.ToString()).Name,
+                    TenThanhPham = _ThanhPhamRepository.GetById(r.ThanhPhamId.ToString()).Name,
                     ThoiGian = r.ThoiGian.ToString("HH:mm:ss"),
                     IsDuyet = r.Status,
                     NguoiDuyet = r.NguoiDuyet
@@ -450,7 +450,7 @@ namespace KEO_Baitest.Services.Implements
                     MaPhieuNhap = r.MaPhieu,
                     Ngay = r.CreateDate.ToString("MM/dd/yyyy"),
                     TinhTrang = r.Status,
-                    TenKho = _khoThanhPhamRepository.GetById(r.KhoThanhPhamId).Name
+                    TenKho = _khoThanhPhamRepository.GetById(r.KhoThanhPhamId.ToString()).Name
                 })
                 .ToList();
 

@@ -22,14 +22,14 @@ namespace KEO_Baitest.Services.Implements
 
         protected override ThanhPham? getEntityByDto(ThanhPhamDTO dto)
         {
-            return _repository.Find(r => (r.IsDeleted == false) && r.MaKeToan.Equals(dto.MaKeToan.Trim().ToUpper().Replace(" ", string.Empty)))
-                .FirstOrDefault();
+            var result = _repository.GetById(dto.Id);
+            return result.IsDeleted ? null : result;
         }
 
         protected override ThanhPham? getEntityByMa(string ma)
         {
-            return _repository.Find(r => (r.IsDeleted == false) && r.MaKeToan.Equals(ma.Trim().ToUpper().Replace(" ", string.Empty)))
-                .FirstOrDefault();
+            var result = _repository.GetById(ma);
+            return result.IsDeleted ? null : result;
         }
 
         protected override ThanhPhamDTO MapToDto(ThanhPham entity)
@@ -43,7 +43,7 @@ namespace KEO_Baitest.Services.Implements
                     .FirstOrDefault();
             return new ThanhPhamDTO()
             {
-
+                Id = entity.Id.ToString(),
                 MaKeToan = entity.MaKeToan,
                 MaKyThuat = entity.MaThanhPham,
                 TenThanhPham = entity.Name,
@@ -74,12 +74,13 @@ namespace KEO_Baitest.Services.Implements
             var nhomVatTu = _nhomThanhPhamRepository.GetNhomThanhPhamByMa(dto.MaNhomThanhPham);
             entity.Name = dto.TenThanhPham;
             entity.MaThanhPham = dto.MaKyThuat;
+            entity.MaKeToan = dto.MaKeToan.Trim().ToUpper().Replace(" ", string.Empty);
             entity.DonViTinhId = donViTinh != null ? donViTinh.Id : Guid.Empty;
             entity.NhomThanhPhamId = nhomVatTu != null ? nhomVatTu.Id : Guid.Empty;
             return entity;
         }
 
-        protected override ResponseDTO? ValidateDTO(ThanhPhamDTO dto)
+        protected override ResponseDTO? ValidateDTO(ThanhPhamDTO dto, bool isAdd = true)
         {
             if (string.IsNullOrWhiteSpace(dto.MaKyThuat))
                 return new ResponseDTO { Code = 400, Message = "Mã kỹ thuật là null or only whitespace" };
@@ -95,7 +96,34 @@ namespace KEO_Baitest.Services.Implements
 
             if (_nhomThanhPhamRepository.GetNhomThanhPhamByMa(dto.MaNhomThanhPham) == null)
                 return new ResponseDTO { Code = 400, Message = "Mã nhóm thành phẩm không tồn tại" };
-
+            if (!isAdd)
+            {
+                if (string.IsNullOrWhiteSpace(dto.Id))
+                    return new ResponseDTO { Code = 400, Message = "Id là null or only whitespace" };
+                var entity = _repository.GetById(dto.Id!);
+                if (entity?.IsDeleted != false)
+                {
+                    return new ResponseDTO { Code = 400, Message = "Id không exists" };
+                }
+                else
+                {
+                    var entityAnotherMa = _repository.Find(r => (r.IsDeleted == false)
+                    && r.MaKeToan.Equals(dto.MaKeToan) && !r.Id.Equals(entity.Id));
+                    if (entityAnotherMa.Count != 0)
+                    {
+                        return new ResponseDTO { Code = 400, Message = "Mã này đã tồn tại" };
+                    }
+                }
+            }
+            else
+            {
+                var entity = _repository.Find(r => (r.IsDeleted == false) && r.MaKeToan.Equals(dto.MaKeToan.Trim().ToUpper().Replace(" ", string.Empty)))
+                .FirstOrDefault();
+                if (entity != null)
+                {
+                    return new ResponseDTO { Code = 400, Message = "Mã này đã tồn tại" };
+                }
+            }
             return null;
         }
     }

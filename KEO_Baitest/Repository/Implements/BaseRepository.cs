@@ -31,9 +31,11 @@ namespace KEO_Baitest.Repository.Implements
             _context.Set<T>().Update(entity); 
         }
 
-        public T? GetById(Guid id)
+        public T? GetById(string id)
         {
-            return _context.Set<T>().Find(id);
+            if (Guid.TryParse(id, out Guid parsedGuid))
+                return _context.Set<T>().Find(parsedGuid);
+            return null;
         }
 
         public List<T> GetAll()

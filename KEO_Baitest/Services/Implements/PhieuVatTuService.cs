@@ -185,15 +185,15 @@ namespace KEO_Baitest.Services.Implements
                 .Where(r => !r.IsDeleted) // Loại bỏ những khách hàng bị xóa (nếu cần)
                 .Select(r => new NhapXuatKhoVatTuDetailDTO
                 {
-                    MaKyThuat = _VatTuRepository.GetById(r.VatTuId).MaKyThuat,
-                    MaKeToan = _VatTuRepository.GetById(r.VatTuId).MaKeToan,
+                    MaKyThuat = _VatTuRepository.GetById(r.VatTuId.ToString()).MaKyThuat,
+                    MaKeToan = _VatTuRepository.GetById(r.VatTuId.ToString()).MaKeToan,
                     Id = r.Id,
                     NguoiNhap = r.CreateBy!,
                     Note = r.Notes,
                     SoLot = r.SoLot,
                     SoLuong = r.SoLuong,
-                    TenDvt = _donViTinhRepository.GetById(_VatTuRepository.GetById(r.VatTuId).DonViTinhId).Name,
-                    TenVatTu = _VatTuRepository.GetById(r.VatTuId).Name,
+                    TenDvt = _donViTinhRepository.GetById(_VatTuRepository.GetById(r.VatTuId.ToString()).Id.ToString()).Name,
+                    TenVatTu = _VatTuRepository.GetById(r.VatTuId.ToString()).Name,
                     ThoiGian = r.ThoiGian.ToString("HH:mm:ss"),
                     IsDuyet = r.Status,
                     NguoiDuyet = r.NguoiDuyet
@@ -216,7 +216,7 @@ namespace KEO_Baitest.Services.Implements
                     MaPhieuNhap = r.MaPhieu,
                     Ngay = r.CreateDate.ToString("MM/dd/yyyy"),
                     TinhTrang = r.Status,
-                    TenKho = _khoVatTuRepository.GetById(r.KhoVatTuId).Name
+                    TenKho = _khoVatTuRepository.GetById(r.KhoVatTuId.ToString()).Name
                 })
                 .ToList();
 
@@ -258,7 +258,7 @@ namespace KEO_Baitest.Services.Implements
                 .ToList();
 
             var result = phieuVatTuDetails.Select(detail => {
-                var vatTu = _VatTuRepository.GetById(detail.VatTuId);
+                var vatTu = _VatTuRepository.GetById(detail.VatTuId.ToString());
 
                 return new BC_XuatNhapKhoVatTu
                 {
@@ -266,11 +266,11 @@ namespace KEO_Baitest.Services.Implements
                     MaKyThuat = vatTu.MaKyThuat,
                     MaKeToan = vatTu.MaKeToan,
                     TenVatTu = vatTu.Name,
-                    Dvt = _donViTinhRepository.GetById((Guid)(vatTu.DonViTinhId)).Name,
+                    Dvt = _donViTinhRepository.GetById(vatTu.DonViTinhId.ToString()).Name,
                     SoLuong = detail.SoLuong,
                     Time = detail.CreateDate.ToString("HH:mm:ss"),
                     SoLot = detail.SoLot,
-                    TenNCC = detail.NhaCungCapID == null ? null : _nhaCungCapRepository.GetById((Guid)detail.NhaCungCapID!).Name
+                    TenNCC = detail.NhaCungCapID == null ? null : _nhaCungCapRepository.GetById(detail.NhaCungCapID.ToString()!).Name
                 };
             }).ToList();
             var groupedQuery = result
@@ -342,9 +342,9 @@ namespace KEO_Baitest.Services.Implements
 
             // Kết quả tính toán vật tư của tháng hiện tại
             var result = phieuVatTuDetails.Select(detail => {
-                var vatTu = _VatTuRepository.GetById(detail.VatTuId);
-                var nhomVatTu = _nhomVatTuRepository.GetById(vatTu.NhomVatTuId); // Lấy nhóm vật tư
-                var phieuVatTu = _phieuVatTuRepository.GetById(detail.PhieuVatTuId);
+                var vatTu = _VatTuRepository.GetById(detail.VatTuId.ToString());
+                var nhomVatTu = _nhomVatTuRepository.GetById(vatTu.NhomVatTuId.ToString()); // Lấy nhóm vật tư
+                var phieuVatTu = _phieuVatTuRepository.GetById(detail.PhieuVatTuId.ToString());
                 // Tính số lượng đầu kỳ
                 double dauKy = tonCuoiKyTruoc.ContainsKey(vatTu.Id) ? tonCuoiKyTruoc[vatTu.Id] : 0;
 
@@ -354,7 +354,7 @@ namespace KEO_Baitest.Services.Implements
                     vatTu.MaKyThuat,
                     vatTu.MaKeToan,
                     TenVatTu = vatTu.Name,
-                    DVT = _donViTinhRepository.GetById((Guid)(vatTu.DonViTinhId)).Name,
+                    DVT = _donViTinhRepository.GetById(vatTu.DonViTinhId.ToString()).Name,
                     detail.SoLuong,
                     phieuVatTu.ImportOrExport,
                     detail.Status,

@@ -7,7 +7,7 @@ namespace KEO_Baitest.Repository.Interfaces
         void Add(T entity);
         void Update(T entity);
         void Delete(T entity);
-        T GetById(Guid id);
+        T GetById(string id);
         List<T> GetAll();
         bool IsSaveChange();
         List<T> Find(Expression<Func<T, bool>> predicate);

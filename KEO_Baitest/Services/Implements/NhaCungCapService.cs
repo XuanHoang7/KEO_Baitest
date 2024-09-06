@@ -38,9 +38,9 @@ namespace KEO_Baitest.Services.Implements
 
         protected override NhaCungCap UpdateEntityF(NhaCungCap nhaCungCap, NhaCungCapDTO dto)
         {
-            nhaCungCap.Name = dto.TenNhaCungCap;
-            nhaCungCap.DiaChi = dto.DiaChi;
-            nhaCungCap.SoDienThoai = dto.SoDienThoai;
+            nhaCungCap.Name = dto.TenNhaCungCap ?? nhaCungCap.Name;
+            nhaCungCap.DiaChi = dto.DiaChi ?? nhaCungCap.DiaChi;
+            nhaCungCap.SoDienThoai = dto.SoDienThoai ?? nhaCungCap.Name;
             return nhaCungCap;
         }
 

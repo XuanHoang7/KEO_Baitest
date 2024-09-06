@@ -1,4 +1,5 @@
 ﻿using KEO_Baitest.Data.DTOs;
+using KEO_Baitest.Services.Implements;
 using KEO_Baitest.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,14 @@ namespace KEO_Baitest.Controllers
         public IActionResult DeletePVTDetails(string ma)
         {
             var res = _qRThanhPhamService.Delete(ma);
+            return StatusCode(res.Code, res);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public IActionResult Update(UpdateQRThanhPhamDTO update)
+        {
+            var res = _qRThanhPhamService.Update(update);
             return StatusCode(res.Code, res);
         }
     }

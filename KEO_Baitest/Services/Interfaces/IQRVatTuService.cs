@@ -8,6 +8,7 @@ namespace KEO_Baitest.Services.Interfaces
     {
         public ResponseDTO Add(QRVatTuE dto);
         public ResponseDTO Delete(string Id);
+        public ResponseDTO Update(UpdateQRVatTuDTO dto);
         public QRVatTu? GetByQRCode(string qr);
         public ResponseGetDTO<QRVatTuO> GetAll(int page, string keyword);
     }

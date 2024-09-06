@@ -99,11 +99,12 @@ namespace KEO_Baitest.Services.Implements
 
         public ResponseDTO Update(KhachHangDTO dto)
         {
-            var errorResponse = ValidateDTO(dto);
-            if (errorResponse != null) return errorResponse;
+            if (dto.SoDienThoai != null && IsValidVietnamesePhoneNumber(dto.SoDienThoai))
+                return new ResponseDTO { Code = 400, Message = "Số điện thoại không hợp lệ tại Việt Nam" };
+
             string? userId = _userService.GetCurrentUser();
             if (userId == null)
-                return new ResponseDTO { Code = 400, Message = "User not exists" };
+                return new ResponseDTO { Code = 400, Message = "User không tồn tại" };
             var khachHangExists = _khachHangRepository
                 .Find(r => (r.IsDeleted == false) && r.MaKhachHang
                 .Equals(dto.MaKhachHang.Trim().ToUpper().Replace(" ", string.Empty)))
@@ -111,9 +112,9 @@ namespace KEO_Baitest.Services.Implements
 
             if (khachHangExists != null)
             {
-                khachHangExists.Name = dto.TenKhachHang;
-                khachHangExists.DiaChi = dto.DiaChi;
-                khachHangExists.SoDienThoai = dto.SoDienThoai;
+                khachHangExists.Name = dto.TenKhachHang ?? khachHangExists.Name;
+                khachHangExists.DiaChi = dto.DiaChi ?? khachHangExists.DiaChi;
+                khachHangExists.SoDienThoai = dto.SoDienThoai ?? khachHangExists.DiaChi;
                 khachHangExists.UpdateBy = userId;
                 khachHangExists.UpdateDate = DateTime.Now;
                 _khachHangRepository.Update(khachHangExists);

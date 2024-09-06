@@ -38,12 +38,12 @@ namespace KEO_Baitest.Controllers
             return StatusCode(res.Code, res);
         }
 
-        //[HttpPut("/details")]
-        //[Authorize]
-        //public IActionResult UpdatePVTDetails(UpdateXNKDTO update)
-        //{
-        //    var res = _updateXNKService.Update(update);
-        //    return StatusCode(res.Code, res);
-        //}
+        [HttpPut]
+        [Authorize]
+        public IActionResult Update(UpdateQRVatTuDTO update)
+        {
+            var res = _qRVatTuService.Update(update);
+            return StatusCode(res.Code, res);
+        }
     }
 }

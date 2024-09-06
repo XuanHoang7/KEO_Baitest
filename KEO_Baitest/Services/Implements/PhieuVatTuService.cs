@@ -144,13 +144,6 @@ namespace KEO_Baitest.Services.Implements
             if (userId == null)
                 return new ResponseDTO { Code = 400, Message = "User not exists" };
             var phieuVatTu = _phieuVatTuRepository.Find(r => (r.IsDeleted == false) && r.MaPhieu.Equals(result)).FirstOrDefault();
-            //var phieuVatTuDetail = _phieuVatTuDetailRepository.Find(r =>
-            //    (r.IsDeleted == false) 
-            //    && r.CreateBy.Equals(userId)
-            //    && r.
-            //).FirstOrDefault();
-
-            //var phieuVatTuId = _phieuVatTuDetailRepository.Find(r => r.CreateBy.Equals(userId) && r.CreateDate.Equals(DateTime.Now));
             if (phieuVatTuDTO.IsNhapKho == false)
             {
                 var phieuVatTuDetails = _phieuVatTuDetailRepository
@@ -420,59 +413,48 @@ namespace KEO_Baitest.Services.Implements
 
         public ResponseDTO Delete(string ma)
         {
-            if (!string.IsNullOrWhiteSpace(ma))
+            if (string.IsNullOrWhiteSpace(ma))
+                return new ResponseDTO { Code = 400, Message = "Invalid identifier" };
+
+            string? userId = _userService.GetCurrentUser();
+            if (userId == null)
+                return new ResponseDTO { Code = 400, Message = "User không tồn tại" };
+
+            var entity = getEntityByMa(ma);
+            if (entity == null)
+                return new ResponseDTO { Code = 400, Message = "Entity không tồn tại" };
+
+            if (entity.Status)
+                return new ResponseDTO { Code = 400, Message = "Phiếu đã duyệt không được xóa" };
+            // Đánh dấu entity đã bị xóa
+            entity.IsDeleted = true;
+            entity.DeleteBy = userId;
+            entity.DeleteDate = DateTime.Now;
+            _phieuVatTuDetailRepository.Update(entity);
+            _phieuVatTuDetailRepository.IsSaveChange();
+
+            // Kiểm tra xem có bất kỳ chi tiết nào của Phiếu Vật Tư không bị xóa không
+            var remainingDetails = _phieuVatTuDetailRepository.Find(r => !r.IsDeleted 
+            && r.PhieuVatTuId.Equals(entity.Id)).FirstOrDefault();
+            if (remainingDetails == null)
             {
-                string? userId = _userService.GetCurrentUser();
-                if (userId == null)
-                    return new ResponseDTO { Code = 400, Message = "User not exists" };
-
-                var entityExists = getEntityByMa(ma);
-
-                if (entityExists != null)
+                // Nếu không còn chi tiết nào, xóa luôn Phiếu Vật Tư
+                var phieuVatTu = _phieuVatTuRepository.Find(r => !r.IsDeleted 
+                && r.Id.Equals(entity.PhieuVatTuId)).FirstOrDefault();
+                if (phieuVatTu != null)
                 {
-                    if (entityExists.Status == true)
-                    {
-                        return new ResponseDTO()
-                        {
-                            Code = 400,
-                            Message = "Phiếu này không được xóa vì đã duyệt",
-                            Description = null
-                        };
-                    }
-                    entityExists.IsDeleted = true;
-                    entityExists.DeleteBy = userId;
-                    entityExists.DeleteDate = DateTime.Now;
-                    _phieuVatTuDetailRepository.Update(entityExists);
-                    _phieuVatTuDetailRepository.IsSaveChange();
-                    if (_phieuVatTuDetailRepository.Find(r => (r.IsDeleted == false)
-                        && r.PhieuVatTuId.Equals(entityExists.Id)).FirstOrDefault() == null)
-                    {
-                        var phieuVatTu = _phieuVatTuRepository.Find(r => (r.IsDeleted == false)
-                        && r.Id.Equals(entityExists.PhieuVatTuId)).FirstOrDefault();
-                        phieuVatTu!.IsDeleted = true;
-                        phieuVatTu.DeleteBy = userId;
-                        phieuVatTu.DeleteDate = DateTime.Now;
-                        _phieuVatTuRepository.Update(phieuVatTu);
-                        _phieuVatTuRepository.IsSaveChange();
-                    }
-                    return new ResponseDTO()
-                    {
-                        Code = 200,
-                        Message = "Success",
-                        Description = null
-                    };
+                    phieuVatTu.IsDeleted = true;
+                    phieuVatTu.DeleteBy = userId;
+                    phieuVatTu.DeleteDate = DateTime.Now;
+                    _phieuVatTuRepository.Update(phieuVatTu);
+                    _phieuVatTuRepository.IsSaveChange();
                 }
-                return new ResponseDTO()
-                {
-                    Code = 400,
-                    Message = "Entity not found",
-                    Description = null
-                };
             }
+
             return new ResponseDTO()
             {
-                Code = 400,
-                Message = "Invalid identifier",
+                Code = 200,
+                Message = "Success",
                 Description = null
             };
         }

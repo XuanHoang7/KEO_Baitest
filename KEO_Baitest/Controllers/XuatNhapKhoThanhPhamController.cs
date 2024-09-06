@@ -178,6 +178,7 @@ namespace KEO_Baitest.Controllers
                     worksheet.Cells[rowIndex, 1].Value = nhom.Name;
                     worksheet.Cells[rowIndex, 1, rowIndex, 8].Merge = true; // Gộp các cột từ 1 đến 8 để hiển thị tên nhóm
                     worksheet.Cells[rowIndex, 1].Style.Font.Bold = true; // In đậm
+                    worksheet.Cells[rowIndex, 1].Style.Font.Size = 20; // In đậm
                     rowIndex++; // Tăng index cho hàng mới
 
                     // Điền chi tiết từng vật tư trong nhóm
